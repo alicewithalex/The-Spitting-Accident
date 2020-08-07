@@ -31,7 +31,18 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="CameraFollower.cs" t="Include" />
+          <e p="Car.cs" t="Include" />
+          <e p="CarGenerator.cs" t="Include" />
+          <e p="DeactivateOnTrigger.cs" t="Include" />
+          <e p="GameSingleton.cs" t="Include" />
+          <e p="Inventory.cs" t="Include" />
+          <e p="IUseable.cs" t="Include" />
           <e p="Player.cs" t="Include" />
+          <e p="SoundEffect.cs" t="Include" />
+          <e p="SoundEffectHandler.cs" t="Include" />
+          <e p="UserInterface.cs" t="Include" />
+          <e p="Weapon.cs" t="Include" />
+          <e p="WeaponData.cs" t="Include" />
         </e>
         <e p="TextMesh Pro" t="Include">
           <e p="Fonts" t="Include">

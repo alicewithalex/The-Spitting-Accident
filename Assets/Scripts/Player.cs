@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(Rigidbody),typeof(Animator))]
+[RequireComponent(typeof(Rigidbody),typeof(Animator),typeof(Inventory))]
 public class Player : MonoBehaviour
 {
 
@@ -32,6 +33,7 @@ public class Player : MonoBehaviour
 
     private Rigidbody _rigidbody;
     private Animator _animator;
+    private Inventory _inventory;
     private Transform _camera;
 
     private Vector2 input;
@@ -52,6 +54,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _inventory = GetComponent<Inventory>();
         _animator = GetComponent<Animator>();
         
         if (Camera.main == null)
@@ -67,7 +70,9 @@ public class Player : MonoBehaviour
         }
         
         _rigidbody.transform.position = new Vector3(spots[0].position.x,_rigidbody.transform.position.y,_rigidbody.transform.position.z);
-        
+
+        _inventory.OnWeaponDeactivated += DisableAnimation;
+
     }
 
     private void Update()
@@ -82,61 +87,125 @@ public class Player : MonoBehaviour
         // PerformMovement();
     }
 
+    private void OnDestroy()
+    {
+        _inventory.OnWeaponDeactivated -= DisableAnimation;
+    }
+
     #endregion
 
     #region Private Methods
 
+    private void DisableAnimation()
+    {
+        weaponEnabled = false;
+        _animator.SetBool("weaponEnabled",weaponEnabled);
+    }
+    
     private void HandleInput()
     {
-        //For PC Version
-        // input = new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical"));  // 8-directional movement
-        
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-            swipeStartPos = Input.mousePosition;
 
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+        if (GameSingleton.instance.GameBegins)
         {
-            float swipeDistance = Mathf.Abs(swipeStartPos.x - Input.mousePosition.x);
+            //For PC Version
+            // input = new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical"));  // 8-directional movement
 
-            if (swipeDistance >= swipeThreshold && IsMove==false)
+            #region Desktop Input
+
+
+            //
+            // if (Input.GetKeyDown(KeyCode.Mouse0))
+            // {
+            //     swipeStartPos = Input.mousePosition;
+            //
+            // }
+            //
+            // if (Input.GetKeyUp(KeyCode.Mouse0))
+            // {
+            //     float swipeDistance = Mathf.Abs(swipeStartPos.x - Input.mousePosition.x);
+            //
+            //     if (swipeDistance >= swipeThreshold && IsMove == false)
+            //     {
+            //         bool swipeLeft = swipeStartPos.x - Input.mousePosition.x > 0;
+            //
+            //         if (swipeLeft)
+            //         {
+            //             if (currentSpotIndex > 0)
+            //             {
+            //                 StartCoroutine(MoveToDestinationPoint(swipeLeft));
+            //             }
+            //         }
+            //         else
+            //         {
+            //             if (currentSpotIndex < spots.Count - 1)
+            //             {
+            //                 StartCoroutine(MoveToDestinationPoint(swipeLeft));
+            //             }
+            //         }
+            //     }
+            //     else
+            //     {
+            //         if (weaponEnabled == false)
+            //         {
+            //             ActivateWeaponAnimation();
+            //             _inventory.ActivateWeapon();
+            //             GameSingleton.instance._soundEffectHandler.SpawnSoundEffect(SoundType.Splat);
+            //         }
+            //     }
+            // }
+
+            #endregion
+
+            #region Android Input
+
+
+            //For Android Version
+            if (Input.touchCount > 0 )
             {
-                bool swipeLeft = swipeStartPos.x - Input.mousePosition.x > 0;
-                
-                if (swipeLeft)
+                if(Input.GetTouch(0).phase.Equals(TouchPhase.Began))
+                    swipeStartPos = Input.mousePosition;
+            
+                if (Input.GetTouch(0).phase.Equals(TouchPhase.Ended))
                 {
-                    if (currentSpotIndex > 0)
+                    float swipeDistance = Mathf.Abs(swipeStartPos.x - Input.mousePosition.x);
+            
+                    if (swipeDistance >= swipeThreshold && IsMove == false)
                     {
-                        StartCoroutine(MoveToDestinationPoint(swipeLeft));
+                        bool swipeLeft = swipeStartPos.x - Input.mousePosition.x > 0;
+
+                        if (swipeLeft)
+                        {
+                            if (currentSpotIndex > 0)
+                            {
+                                StartCoroutine(MoveToDestinationPoint(swipeLeft));
+                            }
+                        }
+                        else
+                        {
+                            if (currentSpotIndex < spots.Count - 1)
+                            {
+                                StartCoroutine(MoveToDestinationPoint(swipeLeft));
+                            }
+                        }
                     }
-                }
-                else
-                {
-                    if (currentSpotIndex < spots.Count-1)
+                    else
                     {
-                        StartCoroutine(MoveToDestinationPoint(swipeLeft));
+                        if (weaponEnabled == false)
+                        {
+                            ActivateWeaponAnimation();
+                            _inventory.ActivateWeapon();
+                            GameSingleton.instance._soundEffectHandler.SpawnSoundEffect(SoundType.Splat);
+                        }
                     }
                 }
             }
-        }
 
-        //For Android Version
-        // if (Input.touchCount > 0 )
-        // {
-        //     if(Input.GetTouch(0).phase.Equals(TouchPhase.Began))
-        //         swipeStartPos = Input.mousePosition;
-        //
-        //     if (Input.GetTouch(0).phase.Equals(TouchPhase.Ended))
-        //     {
-        //         float swipeDistance = Mathf.Abs(swipeStartPos.x - Input.mousePosition.x);
-        //
-        //         if (swipeDistance >= swipeThreshold)
-        //         {
-        //             bool swipeLeft = swipeStartPos.x - Input.mousePosition.x > 0;
-        //             
-        //             Debug.Log(swipeLeft);
-        //         }
-        //     }
-        // }
+            #endregion
+        }
+        else
+        {
+            swipeStartPos = Input.mousePosition;
+        }
     }
 
     private void HandleAnimation()
@@ -160,6 +229,14 @@ public class Player : MonoBehaviour
     private void PerformMovement()
     {
         // _rigidbody.MovePosition(_rigidbody.position + _rigidbody.transform.forward*movementSpeed*Time.fixedDeltaTime*input.magnitude);
+    }
+
+    private void ActivateWeaponAnimation()
+    {
+        weaponEnabled = true;
+        
+        _animator.SetBool("weaponEnabled",weaponEnabled);
+        _animator.SetFloat("weaponType",.5f);
     }
 
 
