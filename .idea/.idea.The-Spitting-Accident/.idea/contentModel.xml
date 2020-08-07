@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\alice\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\alice\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_The-Spitting-Accident.-857275748.00" t="ExcludeRecursive" />
+    <e p="D:\Game Development\GitHub\TheSpittingAccident\The-Spitting-Accident" t="IncludeRecursive">
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="From Asset Store" t="Include">
+          <e p="Customizable Skybox" t="Include">
+            <e p="Stylized Sky" t="Include">
+              <e p="Shaders" t="Include">
+                <e p="Stylized Sky.shader" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Supercyan Character Pack Free Sample" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="DemoFree.cs" t="Include" />
+              <e p="FreeCameraLogic.cs" t="Include" />
+              <e p="SimpleSampleCharacterControl.cs" t="Include" />
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="Legacy" t="Include">
+                <e p="CelShader.shader" t="Include" />
+              </e>
+              <e p="SupercyanShader.shader" t="Include" />
+              <e p="SupercyanShaderLighting.cginc" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Player.cs" t="Include" />
+        <e p="Scripts" t="Include">
+          <e p="CameraFollower.cs" t="Include" />
+        </e>
+      </e>
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+      <e p="The-Spitting-Accident.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>
